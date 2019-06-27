@@ -1,5 +1,5 @@
 import React from 'react';
-import TodoItem from './Todoitem';
+import TodoItem from './TodoItem';
 
 interface Props {
 
@@ -41,7 +41,7 @@ class TodoList extends React.Component<Props, State> {
   onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const { todoItems, input } = this.state;
-    const newItem: TodoItemState = { id: this.nextTodoId++, text: input, done: false};
+    const newItem: TodoItemState = { id: this.nextTodoId++, text: input, done: false };
     const nextTodoItems: TodoItemState[] = todoItems.concat(newItem);
     this.setState({
       todoItems: nextTodoItems
@@ -62,4 +62,34 @@ class TodoList extends React.Component<Props, State> {
       input: value
     });
   }
+
+  render() {
+    const { onSubmit, onChange, onToggle, onRemove } = this;
+    const { input, todoItems } = this.state;
+
+    const todoItemList: React.ReactElement[] = todoItems.map(todo => (
+      <TodoItem
+        key={todo.id}
+        done={todo.done}
+        onToggle={() => onToggle(todo.id)}
+        onRemove={() => onRemove(todo.id)}
+        text={input}
+      />
+    ));
+
+    return (
+      <div>
+        <h1>오늘 뭐하지?</h1>
+        <form onSubmit={onSubmit}>
+          <input onChange={onChange} value={input} />
+          <button type="submit">추가하기</button>
+        </form>
+        <ul>
+          { todoItemList }
+        </ul>
+      </div>
+    );
+  }
 }
+
+export default TodoList;
