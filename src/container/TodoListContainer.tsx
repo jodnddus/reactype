@@ -7,15 +7,16 @@ import { bindActionCreators } from 'redux';
 
 interface Props {
   todoItems: TodoItemDataParams[];
-  input: string;
+  desc: string;
+  username: string;
   TodosActions: typeof todosActions;
 }
 
 class TodoListContainer extends React.Component<Props> {
   onCreate = (): void => {
-    const { TodosActions, input } = this.props;
+    const { TodosActions, desc, username } = this.props;
     //액션 발생
-    TodosActions.create(input);
+    TodosActions.create(desc, username);
   }
   onRemove = (id: number) => {
     const { TodosActions } = this.props;
@@ -25,20 +26,27 @@ class TodoListContainer extends React.Component<Props> {
     const { TodosActions } = this.props;
     TodosActions.toggle(id);
   }
-  onChange = (e: React.FormEvent<HTMLInputElement>): void => {
+  onChangeDesc = (e: React.FormEvent<HTMLInputElement>): void => {
     const { value } = e.currentTarget;
     const { TodosActions } = this.props;
-    TodosActions.changeInput(value);
+    TodosActions.inputDesc(value);
+  }
+  onChangeUsername = (e: React.FormEvent<HTMLInputElement>): void => {
+    const { value } = e.currentTarget;
+    const { TodosActions } = this.props;
+    TodosActions.inputUsername(value);
   }
 
   render() {
-    const { input, todoItems } = this.props;
-    const { onCreate, onRemove, onToggle, onChange } = this;
+    const { desc, username, todoItems } = this.props;
+    const { onCreate, onRemove, onToggle, onChangeDesc, onChangeUsername } = this;
     return (
       <TodoList
-        input={input}
+        desc={desc}
+        username={username}
         todoItems={todoItems}
-        onChange={onChange}
+        onChangeDesc={onChangeDesc}
+        onChangeUsername={onChangeUsername}
         onRemove={onRemove}
         onToggle={onToggle}
         onCreate={onCreate}
@@ -49,7 +57,8 @@ class TodoListContainer extends React.Component<Props> {
 
 export default connect(
   (todos: StoreState) => ({
-    input: todos.todo.input,
+    desc: todos.todo.desc,
+    username: todos.todo.username,
     todoItems: todos.todo.todoItems
   }),
   (dispatch) => ({

@@ -3,23 +3,32 @@ import TodoItem from './TodoItem';
 import { TodoItemDataParams } from '../store/modules/todos'
 
 interface Props {
-  input: string;
+  desc: string;
+  username: string;
   todoItems: TodoItemDataParams[];
   onCreate(): void;
   onRemove(id: number): void;
   onToggle(id: number): void;
-  onChange(e: any): void;
+  onChangeDesc(e: any): void;
+  onChangeUsername(e: any): void;
 }
 
-const TodoList: React.SFC<Props> = ({ input, todoItems, onCreate, onRemove, onToggle, onChange }) => {
+const TodoList: React.SFC<Props> = ({
+  desc, username,
+  todoItems, onCreate,
+  onRemove, onToggle,
+  onChangeDesc, onChangeUsername }) => {
   const todoItemList = todoItems.map(todo => todo ? (
-    <TodoItem
-      key={todo.id}
-      done={todo.done}
-      onToggle={() => onToggle(todo.id)}
-      onRemove={() => onRemove(todo.id)}
-      text={todo.text}
-    />
+    <div>
+      <h1>{todo.username}</h1>
+      <TodoItem
+        key={todo.id}
+        done={todo.done}
+        onToggle={() => onToggle(todo.id)}
+        onRemove={() => onRemove(todo.id)}
+        desc={todo.desc}
+      />
+    </div>
   ) : null);
 
   return (
@@ -29,7 +38,9 @@ const TodoList: React.SFC<Props> = ({ input, todoItems, onCreate, onRemove, onTo
         e.preventDefault();
         onCreate();
       }}>
-        <input onChange={onChange} value={input} />
+        이름:
+        <input onChange={onChangeUsername} value={username} /> <br />
+        할것:<input onChange={onChangeDesc} value={desc} />
         <button type="submit">추가하기</button>
       </form>
       <ul>{todoItemList}</ul>

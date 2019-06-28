@@ -2,19 +2,22 @@
 
 export interface TodoItemDataParams {
   id: number;
-  text: string;
+  username: string;
+  desc: string;
   done: boolean;
 }
 
 export interface TodoState {
   todoItems: TodoItemDataParams[];
-  input: string;
+  desc: string;
+  username: string;
 }
 
 export const CREATE = 'todo/CREATE';
 export const REMOVE = 'todo/REMOVE';
 export const TOGGLE = 'todo/TOGGLE';
-export const CHANGE_INPUT = 'todo/CHANGE_INPUT';
+export const INPUT_DESC = 'todo/INPUT_DESC';
+export const INPUT_USERNAME = 'todo/INPUT_USERNAME'
 
 interface CreateAction {
   type: typeof CREATE;
@@ -35,24 +38,32 @@ interface ToggleAction {
   };
 }
 
-interface ChangeInputAction {
-  type: typeof CHANGE_INPUT;
+interface InputDescAction {
+  type: typeof INPUT_DESC;
   meta: {
-    input: string;
+    desc: string;
   };
 }
 
-export type TodoActionTypes = | CreateAction | RemoveAction | ToggleAction | ChangeInputAction;
+interface InputUsernameAction {
+  type: typeof INPUT_USERNAME;
+  meta: {
+    username: string;
+  };
+}
+
+export type TodoActionTypes = | CreateAction | RemoveAction | ToggleAction | InputDescAction | InputUsernameAction;
 
 // actions
 let autoId = 0;
 
-function create(text: string) {
+function create(desc: string, username: string) {
   return {
     type: CREATE,
     payload: {
       id: autoId++,
-      text: text,
+      username: username,
+      desc: desc,
       done: false
     }
   };
@@ -76,11 +87,20 @@ function toggle(id: number) {
   };
 }
 
-function changeInput(input: string) {
+function inputDesc(desc: string) {
   return {
-    type: CHANGE_INPUT,
+    type: INPUT_DESC,
     meta: {
-      input
+      desc
+    }
+  };
+}
+
+function inputUsername(username: string) {
+  return {
+    type: INPUT_USERNAME,
+    meta: {
+      username
     }
   };
 }
@@ -89,21 +109,24 @@ export const actionCreators = {
   create,
   remove,
   toggle,
-  changeInput
+  inputDesc,
+  inputUsername
 };
 
 // reducers
 
 const initialState: TodoState = {
   todoItems: [],
-  input: ''
+  desc: '',
+  username: '',
 };
 
 export function todoReducer(state = initialState, action: TodoActionTypes): TodoState {
   switch (action.type) {
     case CREATE:
       return {
-        input: "",
+        desc: "",
+        username: "",
         todoItems: [ ...state.todoItems, action.payload ]
       };
     case REMOVE:
@@ -121,11 +144,16 @@ export function todoReducer(state = initialState, action: TodoActionTypes): Todo
           return todo;
         })
       };
-    case CHANGE_INPUT:
+    case INPUT_DESC:
       return {
         ...state,
-        input: action.meta.input
+        desc: action.meta.desc
       };
+    case INPUT_USERNAME:
+      return {
+        ...state,
+        username: action.meta.username
+      }
     default:
       return state
   }
