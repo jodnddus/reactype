@@ -1,10 +1,10 @@
 import React from 'react';
-import TodoList from './components/TodoList';
+import TodoListContainer from './container/TodoListContainer'; 
 
 const App: React.FC = () => {
   return (
     <div className="App">
-      <TodoList />
+      <TodoListContainer />
     </div>
   );
 }
