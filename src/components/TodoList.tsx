@@ -73,7 +73,7 @@ class TodoList extends React.Component<Props, State> {
         done={todo.done}
         onToggle={() => onToggle(todo.id)}
         onRemove={() => onRemove(todo.id)}
-        text={input}
+        text={todo.text}
       />
     ));
 
